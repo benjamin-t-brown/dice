@@ -1,0 +1,93 @@
+<html>
+
+<style>
+body{
+	background-color: #333;
+	color: #DDD;
+}
+@keyframes roll-anim {
+    from {background-color: red;}
+    to {background-color: #ddd;}
+}
+.anim {
+	animation-duration: 1s;
+	animation-name: roll-anim;
+}
+</style>
+
+<script>
+'use strict';
+
+let history = [];
+
+function roll( n ){
+	let result = Math.ceil( Math.random() * n );
+	document.getElementById( 'output' ).innerHTML = 'Roll is: ' + result;
+	document.getElementById( 'output' ).className = '';
+	setTimeout( () => {
+		history.push( {
+			result: result,
+			d: n
+		} );
+		document.getElementById( 'output' ).className = 'anim';
+		document.getElementById( 'history' ).innerHTML = '';
+		history.forEach( ( r ) => {
+			document.getElementById( 'history' ).innerHTML = `<div style="display:flex; justify-content:flex-left"><div style="width:50px">D${r.d}</div><div>${r.result}</div></div>` + document.getElementById( 'history' ).innerHTML;
+		} );
+	}, 10 );
+}
+
+function spin( elem ){
+	let num = parseInt( elem.innerHTML.match( /D(.*)/ )[ 1 ] );
+	let ctr = 0;
+	let i = setInterval( () => {
+		if( ctr * 33 > 1000 ) {
+			clearInterval( i );
+			roll( num );
+		} else {
+			document.getElementById( 'output' ).innerHTML = 'Roll is: ' + ( Math.random() * num ).toFixed( 0 );
+			ctr++;
+		}
+	}, 33 );
+}
+
+window.spin = spin;
+window.roll = roll;
+
+</script>
+
+<button onclick="spin(this)">
+D4
+</button>
+
+<button onclick="spin(this)">
+D6
+</button>
+<button onclick="spin(this)">
+D8
+</button>
+<button onclick="spin(this)">
+D10
+</button>
+<button onclick="spin(this)">
+D12
+</button>
+<button onclick="spin(this)">
+D20
+</button>
+
+<button onclick="spin(this)">
+TEST D20
+</button>
+
+<div id="container" >
+	<div id="output" style="color:black; font-size: 42px; background-color:#DDDDDD; margin:5px">
+	Press a button to roll.
+	</div>
+	<div>
+		<h2> History </h2>
+		<div id = "history"></div>
+	</div>
+</div>
+</body>
+</html>
